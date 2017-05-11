@@ -49,8 +49,10 @@
      <Compile Include="Assets\Demigiant\DOTween\Examples\Basics.cs" />
      <Compile Include="Assets\Demigiant\DOTween\Examples\Sequences.cs" />
      <Compile Include="Assets\Scripts\Game\BackGroundScrollController.cs" />
+     <Compile Include="Assets\Scripts\Game\Distance.cs" />
      <Compile Include="Assets\Scripts\Game\GameController.cs" />
      <Compile Include="Assets\Scripts\Game\Player.cs" />
+     <Compile Include="Assets\Scripts\Game\Timer.cs" />
      <Compile Include="Assets\Scripts\Others\API.cs" />
      <Compile Include="Assets\Scripts\Others\Config.cs" />
      <Compile Include="Assets\Scripts\Others\TransitionController.cs" />
