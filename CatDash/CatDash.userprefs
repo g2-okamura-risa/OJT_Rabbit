@@ -1,8 +1,12 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/Ranking/RankingData.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/Ranking/RankingController.cs">
     <Files>
-      <File FileName="Assets/Scripts/Ranking/RankingData.cs" Line="7" Column="1" />
+      <File FileName="Assets/Scripts/Title/TitleController.cs" Line="42" Column="3" />
+      <File FileName="Assets/Scripts/Ranking/RankingController.cs" Line="18" Column="2" />
+      <File FileName="Assets/Scripts/Ranking/RankingData.cs" Line="15" Column="47" />
+      <File FileName="Assets/Scripts/Title/NameModalController.cs" Line="80" Column="3" />
+      <File FileName="Assets/Scripts/Others/TransitionController.cs" Line="42" Column="3" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

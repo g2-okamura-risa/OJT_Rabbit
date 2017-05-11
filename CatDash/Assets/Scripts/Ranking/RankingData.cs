@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using LitJson;
+using DG.Tweening;
 
 public class RankingData : MonoBehaviour {
 
@@ -19,12 +20,10 @@ public class RankingData : MonoBehaviour {
 	/// </summary>
 	public void Init(JsonData rankData, int num){
 
-		var json = rankData ["ranking_data"];
-
-		this.nameTxt.text 	= (string)	json [num]["user_name"];
-		int score			= (int)		json [num]["score"];
+		this.nameTxt.text 	= (string)	rankData [num]["user_name"];
+		int score			= (int)		rankData [num]["score"];
 		this.scoreTxt.text 	= string.Format ("{0:#,0}Pt", score);
 		this.rankTxt.text 	= (num + 1).ToString ();
-
 	}
+		
 }
