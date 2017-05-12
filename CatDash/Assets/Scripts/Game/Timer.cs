@@ -12,7 +12,7 @@ public class Timer : MonoBehaviour {
 	/// <summary>足ボタンがタップされたらtrue </summary>
 	public bool countStart = false;
 
-	private float time = 0;
+	public float time{ get; set;}
 
 
 	// Use this for initialization

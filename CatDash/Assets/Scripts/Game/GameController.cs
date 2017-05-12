@@ -2,19 +2,25 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+using LitJson;
 
 
 public class GameController : MonoBehaviour {
 
 	[SerializeField, HeaderAttribute("距離コントローラー")]
-	private Distance distance;
+	private Distance distanceController;
 
 	[SerializeField, HeaderAttribute("タイマーコントローラー")]
 	private Timer time;
 
-	[SerializeField, HeaderAttribute("猫obj")]
-	private GameObject playerObj; //移動用
+	[SerializeField, HeaderAttribute("遷移コントローラー")]
+	private TransitionController tansition;
+
+
+	[SerializeField, HeaderAttribute("プレイヤーコントローラー")]
+	private Player player; //移動用
+
+
 
 	[SerializeField, HeaderAttribute("足ボタン")]
 	private Button[] footBtn = new Button[2];
@@ -29,11 +35,14 @@ public class GameController : MonoBehaviour {
 	private float dis;
 	private int leftCnt = 0;
 	private int rightCnt = 0;
+	public bool isGameOver = false;
 
 
 	private const float STOP_TIME = 2.0f; 
 	private const int CONTINUITY_NUM = 2; 
 	private const float MOVING_DISTANCE = 0.5f;
+	private const float MAX_MOVING_DISTANCE = 100.0f;
+
 
 
 	// Use this for initialization
@@ -44,6 +53,13 @@ public class GameController : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
+
+
+		if (this.isGameOver) {
+			return;
+		
+		}
+
 
 		if (isTurnOver) {
 			//ボタンoff
@@ -63,6 +79,19 @@ public class GameController : MonoBehaviour {
 			}
 				
 		}
+
+
+
+		if (this.dis >= MAX_MOVING_DISTANCE) {
+
+			this.isGameOver = true;
+			//ゴールアニメーション
+
+			//API
+			ScoreSend();
+
+		}
+
 	}
 
 
@@ -99,7 +128,9 @@ public class GameController : MonoBehaviour {
 		time.countStart = true;
 
 		this.dis += MOVING_DISTANCE;
-		distance.SetDistance (this.dis);
+		this.distanceController.SetDistance (this.dis);
+
+		player.Move();
 
 	}
 
@@ -113,4 +144,29 @@ public class GameController : MonoBehaviour {
 
 	#endregion
 
+
+	#region API
+
+
+	private void ScoreSend(){
+	
+		WWWForm w = new WWWForm();
+		w.AddField ("auth_token", Config.AUTH_TOKEN);
+		w.AddField ("goal_time", this.time.time.ToString());
+		w.AddField ("turnover_num", this.turnOver);
+
+		API api = new API ();
+
+		StartCoroutine(api.Connect(Config.URL_RESULT, w, tansition, ToResult));
+
+	}
+
+	private void ToResult(JsonData json){
+
+		tansition.NextScene ("scene_Ranking");
+
+	}
+
+
+	#endregion
 }

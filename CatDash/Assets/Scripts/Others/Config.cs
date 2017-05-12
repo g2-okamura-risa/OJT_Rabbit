@@ -21,8 +21,8 @@ public class Config : MonoBehaviour {
 	#region urlパス
 
 	public const string URL_LOGIN 	= "http://210.140.85.92:12083/sample/testlogin/login"; 
-	public const string URL_RESULT 	= "http://210.140.85.92:12083/game/finish/gamefinish"; 	//token,goal_time,turnover_num送信
-	public const string URL_RANKING = "";
+	public const string URL_RESULT 	= "http://210.140.85.92:12083/sample/testfinish/finish"; 	//token,goal_time,turnover_num送信
+	public const string URL_RANKING = "http://210.140.85.92:12083/ranking/testranking/ranking";
 
 	#endregion
 

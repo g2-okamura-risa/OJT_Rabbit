@@ -23,7 +23,7 @@ public class RankingData : MonoBehaviour {
 		this.nameTxt.text 	= (string)	rankData [num]["user_name"];
 		int score			= (int)		rankData [num]["score"];
 		this.scoreTxt.text 	= string.Format ("{0:#,0}Pt", score);
-		this.rankTxt.text 	= (num + 1).ToString ();
+		this.rankTxt.text 	= (num + 1).ToString () + "位";
 	}
 		
 }

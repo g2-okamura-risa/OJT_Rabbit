@@ -49,7 +49,7 @@ public class RankingController : MonoBehaviour {
 
 	private void GetRanking(JsonData json){
 
-		for (int i = 0; i < json.Count; i++) {
+		for (int i = 0; i < json.Count-1; i++) {
 			GameObject obj = Instantiate (rankPrefab, this.rankContents.transform) as GameObject;
 			RankingData rankData = obj.GetComponent<RankingData> ();
 			rankData.Init (json, i);

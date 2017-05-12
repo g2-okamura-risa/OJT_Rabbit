@@ -108,14 +108,16 @@ public class API: MonoBehaviour{
 
 
 		if ((int)data ["error_state"] == 1) {
+			transition.NextScene ("scene_Title");
+
 			//有効期限切れ
-			GameObject sessionObj = Instantiate (this.limitOverObj, this.parent.transform) as GameObject;
-			sessionObj.SetActive (true);
-			sessionObj.transform.DOScale (
+			//GameObject sessionObj = Instantiate (this.limitOverObj, this.parent.transform) as GameObject;
+			//sessionObj.SetActive (true);
+			/*sessionObj.transform.DOScale (
 				new Vector3 (1.0f, 1.0f, 1.0f), 0.2f).OnComplete(() =>
 					{
 						transition.NextScene ("scene_Login");
-					});
+					});*/
 
 		}
 		if(this.callback != null)
