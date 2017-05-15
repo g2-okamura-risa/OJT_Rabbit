@@ -20,6 +20,8 @@ public class GameController : MonoBehaviour {
 	[SerializeField, HeaderAttribute("プレイヤーコントローラー")]
 	private Player player; //移動用
 
+	[SerializeField, HeaderAttribute("プレイヤーコントローラー")]
+	private BackGroundScrollController bgController;
 
 
 	[SerializeField, HeaderAttribute("足ボタン")]
@@ -44,10 +46,10 @@ public class GameController : MonoBehaviour {
 	private const float MAX_MOVING_DISTANCE = 100.0f;
 
 
-
 	// Use this for initialization
 	void Start () {
-		
+
+
 	}
 
 
@@ -68,10 +70,9 @@ public class GameController : MonoBehaviour {
 			//カウント開始
 			btnStopCount += 1 * Time.deltaTime;
 
-			if (btnStopCount >= STOP_TIME) {
+			if (btnStopCount >= STOP_TIME) {				
 
-				turnOver++; //転んだ回数カウント
-				Debug.Log( turnOver );
+				turnOver++; 
 				btnStopCount = 0.0f;
 				isTurnOver = false;
 				this.isFootBtn (true);
@@ -85,12 +86,16 @@ public class GameController : MonoBehaviour {
 		if (this.dis >= MAX_MOVING_DISTANCE) {
 
 			this.isGameOver = true;
+			this.time.countStart = false;
 			//ゴールアニメーション
-
+			player.SetState(Player.PLAYER_STATE.JUMP);
 			//API
 			ScoreSend();
 
 		}
+
+
+
 
 	}
 
@@ -99,25 +104,43 @@ public class GameController : MonoBehaviour {
 	#region 足ボタン
 
 	public void LeftBtn(){
+
+
 		this.leftCnt++;
 		this.rightCnt = 0;
+
 		if (this.leftCnt >= CONTINUITY_NUM) {
 			this.leftCnt = 0;
 			this.isTurnOver = true;
+			player.SetState(Player.PLAYER_STATE.TURNOVER);
 			return;
 		}
+
+		player.SetState(Player.PLAYER_STATE.LEFT_WALK);
+
 		playerCalculate ();
+
+
 	}
 
 
 	public void RightBtn(){
+
+
 		this.rightCnt++;
 		this.leftCnt = 0;
+
+
+
 		if (this.rightCnt >= CONTINUITY_NUM) {
 			this.rightCnt = 0;
 			this.isTurnOver = true;
+			player.SetState(Player.PLAYER_STATE.TURNOVER);
 			return;
 		}
+
+		player.SetState(Player.PLAYER_STATE.RIGHT_WALK);
+
 		playerCalculate ();
 
 	}
@@ -127,10 +150,13 @@ public class GameController : MonoBehaviour {
 
 		time.countStart = true;
 
+
+
 		this.dis += MOVING_DISTANCE;
 		this.distanceController.SetDistance (this.dis);
+		this.bgController.SetScroll ();
 
-		player.Move();
+
 
 	}
 

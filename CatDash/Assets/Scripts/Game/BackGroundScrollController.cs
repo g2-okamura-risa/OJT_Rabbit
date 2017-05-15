@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class BackGroundScrollController : MonoBehaviour {
 
-	[SerializeField]
+	/*[SerializeField]
 	private Renderer bgTree;
 
 	[SerializeField]
@@ -47,5 +47,17 @@ public class BackGroundScrollController : MonoBehaviour {
 		float scroll2 = Mathf.Repeat (Time.time * speedBottom, 1);
 		Vector2 offset2 = new Vector2 (scroll2, 0);
 		bgBottom.sharedMaterial.SetTextureOffset ("_MainTex", offset2);
+	}*/
+
+
+
+
+	public void SetScroll(){
+	
+	
+		this.transform.position += new Vector3 (-0.135f, 0.0f, 0.0f);
+	
+	
+	
 	}
 }
