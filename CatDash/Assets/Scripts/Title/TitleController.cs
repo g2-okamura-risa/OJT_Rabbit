@@ -29,16 +29,11 @@ public class TitleController : MonoBehaviour {
 
 
 		modalObj.SetActive (false);
-		//uuid設定
-		Config.USER_UUID = PlayerPrefs.GetString (Config.PREFS_KEY_UUID);
 
+		//uuid取得
+		Config.USER_UUID = PlayerPrefs.GetString (Config.PREFS_KEY_UUID);
 		//uuidを持っていない
 		if (Config.USER_UUID == "") {
-			// 新規作成
-			Config.USER_UUID = System.Guid.NewGuid ().ToString ();
-			PlayerPrefs.SetString (Config.PREFS_KEY_UUID, Config.USER_UUID);
-			PlayerPrefs.Save ();
-
 			//名前入力モーダル表示
 			this.isNewUser = true;
 
@@ -80,7 +75,8 @@ public class TitleController : MonoBehaviour {
 	#endregion
 	private void GetToken(JsonData json){
 
-		Config.AUTH_TOKEN = (string) json["auth_token"];
+		Config.AUTH_TOKEN 	= (string)	json["auth_token"];
+		Config.USER_ID 		= (int)		json ["user_id"];
 
 		//ゲームへ遷移
 		transition.NextScene("scene_Game");

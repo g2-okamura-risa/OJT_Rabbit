@@ -4,17 +4,18 @@ using UnityEngine;
 
 public class Config : MonoBehaviour {
 
-
 	/// <summary> UUID</summary>
 	public static string USER_UUID{ get; set; }
 	/// <summary> トークン</summary>
 	public static string AUTH_TOKEN{ get; set; }
+	/// <summary> ユーザーID</summary>
+	public static int	 USER_ID{ get; set; }
 
 
 	#region PlayerPrefs key
 
-	public const string PREFS_KEY_NAME = "userName";
-	public const string PREFS_KEY_UUID = "uuid";
+	public const string PREFS_KEY_NAME 		= "userName";
+	public const string PREFS_KEY_UUID 		= "uuid";
 
 	#endregion
 

@@ -58,6 +58,7 @@
      <Compile Include="Assets\Scripts\Others\Config.cs" />
      <Compile Include="Assets\Scripts\Others\LimitModalController.cs" />
      <Compile Include="Assets\Scripts\Others\TransitionController.cs" />
+     <Compile Include="Assets\Scripts\Ranking\AutoScrollComponent.cs" />
      <Compile Include="Assets\Scripts\Ranking\RankingController.cs" />
      <Compile Include="Assets\Scripts\Ranking\RankingData.cs" />
      <Compile Include="Assets\Scripts\Title\NameModalController.cs" />

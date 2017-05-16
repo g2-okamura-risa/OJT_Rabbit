@@ -18,6 +18,11 @@ public class RankingController : MonoBehaviour {
 	[SerializeField, HeaderAttribute("セッション切れモーダル")]
 	private GameObject limitOverObj;
 
+	[SerializeField, HeaderAttribute("自動スクロール")]
+	private AutoScrollComponent autoScroll;
+
+	private int indexRank = 0;
+	private int totalRank = 0;
 
 	void Awake(){
 
@@ -29,11 +34,13 @@ public class RankingController : MonoBehaviour {
 		w.AddField ("auth_token", Config.AUTH_TOKEN);
 		StartCoroutine (api.Connect (Config.URL_RANKING, w, transition, GetRanking));
 
-
 	}
 
 	// Use this for initialization
 	void Start () {
+
+
+
 		
 	}
 
@@ -56,7 +63,26 @@ public class RankingController : MonoBehaviour {
 			GameObject obj = Instantiate (rankPrefab, this.rankContents.transform) as GameObject;
 			RankingData rankData = obj.GetComponent<RankingData> ();
 			rankData.Init (json, i);
+			//rankList.Add (rankData);
+
+			if (Config.USER_ID != rankData.user_id)
+				continue;
+
+			indexRank = i;
+			totalRank = json.Count - 1;
+
 		}
+
+
+		StartCoroutine (AutoSet());
+
+	}
+
+
+	private IEnumerator AutoSet(){
+		yield return new WaitForSeconds(1.0f);
+		autoScroll.SetCenter(indexRank, totalRank);
 	
 	}
+
 }

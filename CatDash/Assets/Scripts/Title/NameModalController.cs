@@ -15,6 +15,10 @@ public class NameModalController : MonoBehaviour {
 	private GameObject cautionObj;
 	[SerializeField, HeaderAttribute("遷移コントローラー")]
 	private TransitionController transition;
+	[SerializeField, HeaderAttribute ("セッション切れ")]
+	private GameObject limitOver;
+	[SerializeField, HeaderAttribute ("セッション切れ親obj")]
+	private GameObject parent;
 
 
 	private string userName;
@@ -24,7 +28,7 @@ public class NameModalController : MonoBehaviour {
 
 		this.cautionObj.SetActive (false);
 
-		this.gameObject.transform.DOScale (new Vector3 (1.0f, 1.0f, 1.0f), 1.0f);
+		this.gameObject.transform.DOScale (new Vector3 (1.0f, 1.0f, 1.0f), 0.7f);
 	}
 
 
@@ -46,13 +50,14 @@ public class NameModalController : MonoBehaviour {
 			return;
 		}
 
-		int num = encJIS.GetByteCount(this.userName);
+		//半角判定
+		/*int num = encJIS.GetByteCount(this.userName);
 		bool isZenkaku = ( num == this.userName.Length * 2 );
 
 		if (!isZenkaku) {
 			cautionObj.SetActive (true);
 			return;
-		}
+		}*/
 
 
 		//名前保存
@@ -60,6 +65,10 @@ public class NameModalController : MonoBehaviour {
 		PlayerPrefs.Save ();
 
 
+		// 新規作成
+		Config.USER_UUID = System.Guid.NewGuid ().ToString ();
+		PlayerPrefs.SetString (Config.PREFS_KEY_UUID, Config.USER_UUID);
+		PlayerPrefs.Save ();
 
 		//通信開始OK 遷移
 
@@ -73,13 +82,16 @@ public class NameModalController : MonoBehaviour {
 
 
 		API api = new API ();
+		api.parent = this.parent;
+		api.limitOverObj = this.limitOver;
 		StartCoroutine(api.Connect(Config.URL_LOGIN, w, this.transition, GetToken));
 	}
 
 
 	private void GetToken(JsonData json){
 
-		Config.AUTH_TOKEN = (string) json["auth_token"];
+		Config.AUTH_TOKEN 	= (string)	json["auth_token"];
+		Config.USER_ID 		= (int)		json["user_id"];
 
 		//ゲームへ遷移
 		transition.NextScene("scene_Game");

@@ -112,7 +112,7 @@ public class API: MonoBehaviour{
 			GameObject sessionObj = Instantiate (this.limitOverObj, this.parent.transform) as GameObject;
 			sessionObj.SetActive (true);
 			sessionObj.GetComponent<LimitModalController> ().transition = this.transition;
-			sessionObj.transform.DOScale (new Vector3 (1.0f, 1.0f, 1.0f), 1f);
+			sessionObj.transform.DOScale (new Vector3 (1.0f, 1.0f, 1.0f), 0.7f);
 
 			return;
 		}
