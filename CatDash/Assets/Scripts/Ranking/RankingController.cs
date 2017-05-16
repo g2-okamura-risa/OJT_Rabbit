@@ -13,15 +13,18 @@ public class RankingController : MonoBehaviour {
 	private GameObject rankPrefab;
 
 	[SerializeField, HeaderAttribute("遷移コントローラ")]
-	TransitionController transition;
+	private TransitionController transition;
 
+	[SerializeField, HeaderAttribute("セッション切れモーダル")]
+	private GameObject limitOverObj;
 
 
 	void Awake(){
 
 		//TODO: ランキングデータ取得通信
 		API api = new API ();
-
+		api.limitOverObj = this.limitOverObj;
+		api.parent = this.gameObject;
 		WWWForm w = new WWWForm ();
 		w.AddField ("auth_token", Config.AUTH_TOKEN);
 		StartCoroutine (api.Connect (Config.URL_RANKING, w, transition, GetRanking));

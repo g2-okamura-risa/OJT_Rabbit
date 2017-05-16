@@ -30,6 +30,8 @@ public class GameController : MonoBehaviour {
 	[SerializeField, HeaderAttribute("画面全タップボタン")]
 	private GameObject screenBtnObj;
 
+	[SerializeField, HeaderAttribute("")]
+	private GameObject limitOverObj;
 
 
 	private bool isTurnOver = false; //転んだらtrue; 2秒間ボタン停止
@@ -37,7 +39,7 @@ public class GameController : MonoBehaviour {
 
 	private Vector3 pos;
 	private float btnStopCount = 0.0f;
-	private float dis;
+	private float dis = 0.0f;
 	private int leftCnt = 0;
 	private int rightCnt = 0;
 	public 	bool isGameOver = false;
@@ -204,7 +206,8 @@ public class GameController : MonoBehaviour {
 		w.AddField ("turnover_num", this.turnOver);
 
 		API api = new API ();
-
+		api.limitOverObj = this.limitOverObj;
+		api.parent = this.gameObject;
 		StartCoroutine(api.Connect(Config.URL_RESULT, w, tansition, ToResult));
 
 	}

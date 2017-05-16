@@ -16,7 +16,8 @@ public class TitleController : MonoBehaviour {
 	[SerializeField, HeaderAttribute ("遷移コントローラー")]
 	private TransitionController transition;
 
-
+	[SerializeField]
+	private GameObject limitOver;
 
 	private bool isNewUser = false;
 
@@ -61,8 +62,10 @@ public class TitleController : MonoBehaviour {
 			w.AddField ("uuid", Config.USER_UUID);
 
 			API api = new API ();
+			api.limitOverObj = limitOver;
+			api.parent = this.gameObject;
 			StartCoroutine(api.Connect (Config.URL_LOGIN, w, transition,GetToken));
-			transition.NextScene("scene_Game");
+
 		}
 
 	}

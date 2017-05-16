@@ -27,7 +27,6 @@ public class TransitionController : MonoBehaviour {
 	{
 		curtainImg.color = new Color (0f, 0f, 0f, 1f);
 		curtainImg.DOColor (new Color (0f, 0f, 0f, 0f), 0.8f);
-		//DontDestroyOnLoad(this.gameObject);
 	}
 
 
