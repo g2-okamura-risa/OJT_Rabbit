@@ -17,13 +17,17 @@ public class TransitionController : MonoBehaviour {
 	[SerializeField, HeaderAttribute("%バー")]
 	private Slider slider;
 
+	[SerializeField]
+	private GameObject loadingObj;
 
 	private string sceneName;
 
 
 	void Start()
 	{
-		DontDestroyOnLoad(this.gameObject);
+		curtainImg.color = new Color (0f, 0f, 0f, 1f);
+		curtainImg.DOColor (new Color (0f, 0f, 0f, 0f), 0.8f);
+		//DontDestroyOnLoad(this.gameObject);
 	}
 
 
@@ -32,7 +36,7 @@ public class TransitionController : MonoBehaviour {
 
 		this.sceneName = sceneName;
 		this.Process1 ();
-		//LoadingScene (sceneName);
+
 
 	}
 
@@ -46,13 +50,14 @@ public class TransitionController : MonoBehaviour {
 	private void Process2(){
 
 		SceneManager.LoadScene(sceneName);
-		curtainImg.DOColor (new Color (0f, 0f, 0f, 0f),0.8f).OnComplete (() => {Process3();});
-			
+		//loadingObj.SetActive(true);
+		//StartCoroutine(LoadingScene (sceneName));
+
+		//curtainImg.DOColor (new Color (0f, 0f, 0f, 0f),0.8f).OnComplete (() => {Process3();});
+
 	}
 
 	private void Process3(){
-		
-
 		Destroy (this.gameObject);
 	}
 

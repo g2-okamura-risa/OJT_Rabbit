@@ -27,6 +27,9 @@ public class GameController : MonoBehaviour {
 	[SerializeField, HeaderAttribute("足ボタン")]
 	private Button[] footBtn = new Button[2];
 
+	[SerializeField, HeaderAttribute("画面全タップボタン")]
+	private GameObject screenBtnObj;
+
 
 
 	private bool isTurnOver = false; //転んだらtrue; 2秒間ボタン停止
@@ -37,7 +40,7 @@ public class GameController : MonoBehaviour {
 	private float dis;
 	private int leftCnt = 0;
 	private int rightCnt = 0;
-	public bool isGameOver = false;
+	public 	bool isGameOver = false;
 
 
 	private const float STOP_TIME = 2.0f; 
@@ -48,7 +51,9 @@ public class GameController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-
+		
+		//全画面タップOFF
+		screenBtnObj.SetActive (false);
 
 	}
 
@@ -56,13 +61,11 @@ public class GameController : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-
 		if (this.isGameOver) {
 			return;
-		
 		}
 
-
+		//転んだとき
 		if (isTurnOver) {
 			//ボタンoff
 			this.isFootBtn (false);
@@ -79,7 +82,20 @@ public class GameController : MonoBehaviour {
 
 			}
 				
+		} else {
+			
+			if (Input.GetKeyDown (KeyCode.A)) {
+		
+				this.LeftBtn ();		
+		
+			}
+			if (Input.GetKeyDown (KeyCode.D)) {
+
+				this.RightBtn ();		
+
+			}
 		}
+
 
 
 
@@ -89,12 +105,11 @@ public class GameController : MonoBehaviour {
 			this.time.countStart = false;
 			//ゴールアニメーション
 			player.SetState(Player.PLAYER_STATE.JUMP);
-			//API
-			ScoreSend();
+			this.isFootBtn (false);
+			//全画面タップON
+			screenBtnObj.SetActive (true);
 
 		}
-
-
 
 
 	}
@@ -146,11 +161,18 @@ public class GameController : MonoBehaviour {
 	}
 
 
+	public void ScreenTap(){
+	
+		//API
+		ScoreSend();
+	
+	}
+
+
+	#endregion
 	private void playerCalculate(){
 
 		time.countStart = true;
-
-
 
 		this.dis += MOVING_DISTANCE;
 		this.distanceController.SetDistance (this.dis);
@@ -168,7 +190,7 @@ public class GameController : MonoBehaviour {
 	}
 
 
-	#endregion
+
 
 
 	#region API

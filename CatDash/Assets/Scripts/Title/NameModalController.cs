@@ -24,9 +24,6 @@ public class NameModalController : MonoBehaviour {
 
 		this.cautionObj.SetActive (false);
 
-		DOTween.Init (false, true, LogBehaviour.ErrorsOnly);
-	
-
 		this.gameObject.transform.DOScale (new Vector3 (1.0f, 1.0f, 1.0f), 1.0f);
 	}
 

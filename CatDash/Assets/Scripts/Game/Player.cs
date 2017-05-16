@@ -14,8 +14,6 @@ public class Player : MonoBehaviour {
 	private CameraController cameraController;
 
 
-	private Rigidbody2D rigid;
-
 
 	public enum PLAYER_STATE
 	{
@@ -38,26 +36,6 @@ public class Player : MonoBehaviour {
 
 	}
 
-	void Update(){
-
-	
-
-
-
-	}
-
-
-	private void Move(){
-		//this.transform.localPosition += new Vector3 (0.03f, 0.0f, 0.0f);
-		//cameraController.SetPos (this.transform.localPosition.x);
-	}
-
-
-	public void Walk(){
-
-	
-	
-	}
 
 
 	public void SetState(PLAYER_STATE state){
@@ -72,13 +50,12 @@ public class Player : MonoBehaviour {
 			break;
 
 		case PLAYER_STATE.LEFT_WALK:
-
-			this.Move ();
+			
 			animator.SetTrigger ("LEFT_WALK");
 			break;
 
 		case PLAYER_STATE.RIGHT_WALK:
-			this.Move ();
+
 			animator.SetTrigger ("RIGHT_WALK");
 			break;
 

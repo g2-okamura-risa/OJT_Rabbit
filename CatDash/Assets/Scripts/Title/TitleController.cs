@@ -23,6 +23,10 @@ public class TitleController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+
+		DOTween.Init (false, true, LogBehaviour.ErrorsOnly);
+
+
 		modalObj.SetActive (false);
 		//uuid設定
 		Config.USER_UUID = PlayerPrefs.GetString (Config.PREFS_KEY_UUID);
