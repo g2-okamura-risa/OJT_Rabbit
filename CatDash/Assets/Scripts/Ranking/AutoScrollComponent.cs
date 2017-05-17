@@ -45,13 +45,13 @@ public class AutoScrollComponent : MonoBehaviour {
 
 
 		//スクロールしなくてもすべて表示されている&自分のランキングと全ランキング数が同じ
-		if (contentHeight <= height && index == totalNum) {
+		if (contentHeight <= height && index == totalNum-1) {
 			MoveXmyRankData ();
 			return;
 		}
 
 		//スクロールしなくてもすべて表示されている&自分のランキングと全ランキング数が違う
-		if (contentHeight <= height && index != totalNum) {
+		if (contentHeight <= height && index != totalNum-1) {
 			MoveYotherRankData ();
 			return;
 		}
