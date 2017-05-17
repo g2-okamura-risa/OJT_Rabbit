@@ -143,12 +143,9 @@ public class GameController : MonoBehaviour {
 
 	public void RightBtn(){
 
-
 		this.rightCnt++;
 		this.leftCnt = 0;
-
-
-
+	
 		if (this.rightCnt >= CONTINUITY_NUM) {
 			this.rightCnt = 0;
 			this.isTurnOver = true;

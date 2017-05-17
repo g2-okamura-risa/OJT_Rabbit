@@ -31,7 +31,8 @@ public class RankingController : MonoBehaviour {
 		api.limitOverObj = this.limitOverObj;
 		api.parent = this.gameObject;
 		WWWForm w = new WWWForm ();
-		w.AddField ("auth_token", Config.AUTH_TOKEN);
+		//w.AddField ("auth_token", Config.AUTH_TOKEN);
+		w.AddField ("auth_token", "ss");
 		StartCoroutine (api.Connect (Config.URL_RANKING, w, transition, GetRanking));
 
 	}
@@ -51,30 +52,48 @@ public class RankingController : MonoBehaviour {
 
 	private void GetRanking(JsonData json){
 
+		int index = 0; //位置ずらし用
+
+		List<GameObject> rankList = new List<GameObject> ();
+		RectTransform rect = null;
+
+
 		for (int i = 0; i < json.Count-1; i++) {
+		
 			GameObject obj = Instantiate (rankPrefab, this.rankContents.transform) as GameObject;
+			rect = obj.GetComponent<RectTransform> ();
+
+			obj.transform.localPosition = new Vector3 (0.0f, -rect.sizeDelta.y * index - 5.0f, 0.0f);
+
+			rankList.Add (obj);
+
 			RankingData rankData = obj.GetComponent<RankingData> ();
 			rankData.Init (json, i);
-			//rankList.Add (rankData);
+			index++;
+
 
 			if (Config.USER_ID != rankData.user_id)
 				continue;
 
+			index--;
 			indexRank = i;
 			totalRank = json.Count - 1;
 			rankData.SetFrame ();
+			obj.transform.localPosition += new Vector3 (800.0f,  0.0f, 0.0f);		//右端に待機
+		
 		}
 
+		//コンテンツサイズを修正
+		RectTransform rank = this.rankContents.GetComponent<RectTransform> ();
+		rank.sizeDelta = new Vector2 (0.0f, rect.sizeDelta.y * totalRank + 5 * (totalRank - 1));
 
-		StartCoroutine (AutoSet());
+		autoScroll.rankList = rankList;
 
-	}
-
-
-	private IEnumerator AutoSet(){
-		yield return new WaitForSeconds(1.0f);
 		autoScroll.SetCenter(indexRank, totalRank);
-	
+
 	}
+
+
+
 
 }
