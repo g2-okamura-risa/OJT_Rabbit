@@ -36,14 +36,6 @@ public class RankingController : MonoBehaviour {
 
 	}
 
-	// Use this for initialization
-	void Start () {
-
-
-
-		
-	}
-
 
 	#region ボタン
 
@@ -70,7 +62,7 @@ public class RankingController : MonoBehaviour {
 
 			indexRank = i;
 			totalRank = json.Count - 1;
-
+			rankData.SetFrame ();
 		}
 
 

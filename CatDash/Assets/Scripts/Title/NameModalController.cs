@@ -22,7 +22,7 @@ public class NameModalController : MonoBehaviour {
 
 
 	private string userName;
-	private Encoding encJIS = Encoding.GetEncoding("Shift_JIS");
+	//private Encoding encJIS = Encoding.GetEncoding("Shift_JIS");
 
 	void Start(){
 
