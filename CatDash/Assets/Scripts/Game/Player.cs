@@ -10,10 +10,6 @@ public class Player : MonoBehaviour {
 	[SerializeField, HeaderAttribute("アニメーションコントローラー")]
 	private Animator animator;
 
-	[SerializeField,HeaderAttribute("カメラコントローラー")]
-	private CameraController cameraController;
-
-
 
 	public enum PLAYER_STATE
 	{
@@ -24,52 +20,36 @@ public class Player : MonoBehaviour {
 		JUMP
 	};
 
-	private PLAYER_STATE state;
-
-	void Start(){
-
-
-		this.state = PLAYER_STATE.NORMAL;
-
-		DOTween.Init (false, true, LogBehaviour.ErrorsOnly);
-
-
-	}
-
-
+	private PLAYER_STATE state = PLAYER_STATE.NORMAL;
 
 	public void SetState(PLAYER_STATE state){
 	
 		this.state = state;
 
-		switch (this.state) {
+		switch ( this.state ) {
+		
+			case PLAYER_STATE.NORMAL:
+				break;
 
-		case PLAYER_STATE.NORMAL:
-			
+			case PLAYER_STATE.LEFT_WALK:
 
-			break;
+				animator.SetTrigger ( "LEFT_WALK" );
+				break;
 
-		case PLAYER_STATE.LEFT_WALK:
-			
-			animator.SetTrigger ("LEFT_WALK");
-			break;
+			case PLAYER_STATE.RIGHT_WALK:
 
-		case PLAYER_STATE.RIGHT_WALK:
+				animator.SetTrigger ( "RIGHT_WALK" );
+				break;
 
-			animator.SetTrigger ("RIGHT_WALK");
-			break;
+			case PLAYER_STATE.TURNOVER:
+				animator.SetTrigger ( "TURN_OVER" );
+				break;
 
-		case PLAYER_STATE.TURNOVER:
-			animator.SetTrigger ("TURN_OVER");
-			break;
-
-		case PLAYER_STATE.JUMP:
-			animator.SetBool ("JUMP", true);
-			break;
+			case PLAYER_STATE.JUMP:
+				animator.SetBool ( "JUMP", true );
+				break;
 
 		}
-
-
 	
 	}
 

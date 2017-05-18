@@ -19,12 +19,10 @@ public class RankingData : MonoBehaviour {
 	[SerializeField, HeaderAttribute("フレーム画像親Obj")]
 	private GameObject frameObj;
 
-
 	public int user_id;
-	/// <summary>
-	/// 初期化
-	/// </summary>
+
 	public void Init(JsonData rankData, int num){
+		
 		this.frameObj.SetActive (false);
 		this.nameTxt.text 	= (string)	rankData [num]["user_name"];
 		int score			= (int)		rankData [num]["score"];
@@ -34,6 +32,9 @@ public class RankingData : MonoBehaviour {
 
 	}
 
+	/// <summary>
+	/// フレームを光らせる
+	/// </summary>
 	public void SetFrame(){
 	
 		this.frameObj.SetActive (true);

@@ -9,32 +9,34 @@ public class TitleController : MonoBehaviour {
 
 	[SerializeField, HeaderAttribute ("モーダルobj")]
 	private GameObject modalObj;
+
 	[SerializeField, HeaderAttribute ("スタートボタン")]
 	private Button startButton;
+
 	[SerializeField, HeaderAttribute ("スタートボタン画像")]
 	private GameObject startBtnObj;
+
 	[SerializeField, HeaderAttribute ("遷移コントローラー")]
 	private TransitionController transition;
 
-	[SerializeField]
+	[SerializeField, HeaderAttribute ("セッション切れモーダル")]
 	private GameObject limitOver;
 
 	private bool isNewUser = false;
 
 
-	// Use this for initialization
 	void Start () {
 
-		DOTween.Init (false, true, LogBehaviour.ErrorsOnly);
+		DOTween.Init ( false, true, LogBehaviour.ErrorsOnly );
 
 
-		modalObj.SetActive (false);
+		modalObj.SetActive ( false );
 
 		//uuid取得
-		Config.USER_UUID = PlayerPrefs.GetString (Config.PREFS_KEY_UUID);
-		//uuidを持っていない
-		if (Config.USER_UUID == "") {
-			//名前入力モーダル表示
+		Config.USER_UUID = PlayerPrefs.GetString ( Config.PREFS_KEY_UUID );
+
+		if ( Config.USER_UUID == "" ) {
+			//名前入力モーダル表示フラグ
 			this.isNewUser = true;
 
 			return;
@@ -47,19 +49,21 @@ public class TitleController : MonoBehaviour {
 	#region ボタン
 	public void ToGame(){
 
-		if (this.isNewUser) {
-			modalObj.SetActive (true);
+		if ( this.isNewUser ) {
+			
+			modalObj.SetActive ( true );
 			startButton.interactable = false;
+
 		} else {
 			
 			//uuid送信しtokenもらう
 			WWWForm w = new WWWForm();
-			w.AddField ("uuid", Config.USER_UUID);
+			w.AddField ( "uuid", Config.USER_UUID );
 
 			API api = new API ();
 			api.limitOverObj = limitOver;
 			api.parent = this.gameObject;
-			StartCoroutine(api.Connect (Config.URL_LOGIN, w, transition,GetToken));
+			StartCoroutine( api.Connect ( Config.URL_LOGIN, w, transition, GetToken ) );
 
 		}
 
@@ -73,7 +77,7 @@ public class TitleController : MonoBehaviour {
 	}
 
 	#endregion
-	private void GetToken(JsonData json){
+	private void GetToken( JsonData json ){
 
 		Config.AUTH_TOKEN 	= (string)	json["auth_token"];
 		Config.USER_ID 		= (int)		json ["user_id"];

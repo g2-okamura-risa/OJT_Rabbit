@@ -99,7 +99,6 @@
 'Assets/Demigiant/DOTween/Examples/Basics.cs'
 'Assets/Demigiant/DOTween/Examples/Sequences.cs'
 'Assets/Scripts/Game/BackGroundScrollController.cs'
-'Assets/Scripts/Game/CameraController.cs'
 'Assets/Scripts/Game/Distance.cs'
 'Assets/Scripts/Game/GameController.cs'
 'Assets/Scripts/Game/Player.cs'

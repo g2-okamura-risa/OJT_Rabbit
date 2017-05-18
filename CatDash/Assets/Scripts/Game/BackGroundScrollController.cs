@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class BackGroundScrollController : MonoBehaviour {
 
+	#region 自動スクロール処理
 	/*[SerializeField]
 	private Renderer bgTree;
 
@@ -48,15 +49,39 @@ public class BackGroundScrollController : MonoBehaviour {
 		Vector2 offset2 = new Vector2 (scroll2, 0);
 		bgBottom.sharedMaterial.SetTextureOffset ("_MainTex", offset2);
 	}*/
+	#endregion
 
 
+
+	[SerializeField, HeaderAttribute("スタート位置")]
+	private float startPosX;
+
+	[SerializeField, HeaderAttribute("ゴール位置")]
+	private float endPosX;
+
+	[SerializeField, HeaderAttribute("ゴール距離(m)")]
+	private float goalMeter;
+
+	[SerializeField, HeaderAttribute("一歩で進む距離")]
+	private float oneStep;
+
+
+	private float moveStep;
+
+	void Start(){
+
+		int totalTap = (int)(goalMeter / oneStep);
+		float distance = endPosX - startPosX;
+
+		moveStep = distance / totalTap;
+
+	}
 
 
 	public void SetScroll(){
 	
 	
-		this.transform.position += new Vector3 (-0.135f, 0.0f, 0.0f);
-	
+		this.transform.position += new Vector3 (moveStep, 0.0f, 0.0f);
 	
 	
 	}

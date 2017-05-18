@@ -21,6 +21,10 @@ public class RankingController : MonoBehaviour {
 	[SerializeField, HeaderAttribute("自動スクロール")]
 	private AutoScrollComponent autoScroll;
 
+	[SerializeField, HeaderAttribute("ランキングデータの間隔サイズ")]
+	private float rankDataBuffY = 5.0f; 
+
+
 	private int indexRank = 0;
 	private int totalRank = 0;
 
@@ -31,9 +35,8 @@ public class RankingController : MonoBehaviour {
 		api.limitOverObj = this.limitOverObj;
 		api.parent = this.gameObject;
 		WWWForm w = new WWWForm ();
-		//w.AddField ("auth_token", Config.AUTH_TOKEN);
-		w.AddField ("auth_token", "ss");
-		StartCoroutine (api.Connect (Config.URL_RANKING, w, transition, GetRanking));
+		w.AddField ( "auth_token", Config.AUTH_TOKEN );
+		StartCoroutine ( api.Connect ( Config.URL_RANKING, w, transition, GetRanking ) );
 
 	}
 
@@ -44,7 +47,7 @@ public class RankingController : MonoBehaviour {
 	/// タイトル画面に遷移
 	/// </summary>
 	public void ToTitle(){
-		transition.NextScene ("scene_Title");
+		transition.NextScene ( "scene_Title" );
 	}
 
 	#endregion
@@ -54,42 +57,47 @@ public class RankingController : MonoBehaviour {
 
 		int index = 0; //位置ずらし用
 
-		List<GameObject> rankList = new List<GameObject> ();
-		RectTransform rect = null;
-
-
-		for (int i = 0; i < json.Count-1; i++) {
+		List<GameObject> rankList 	= new List<GameObject> ();
+		RectTransform rankRect 		= null;
+		GameObject obj 				= null;
+	
+		for ( int i = 0; i < json.Count-1; i++ ){
 		
-			GameObject obj = Instantiate (rankPrefab, this.rankContents.transform) as GameObject;
-			rect = obj.GetComponent<RectTransform> ();
+			obj = Instantiate ( rankPrefab, this.rankContents.transform ) as GameObject;
+			rankRect = obj.GetComponent<RectTransform> ();
+			//オブジェクト生成位置を等間隔
+			obj.transform.localPosition = new Vector3 ( 0.0f, -( rankRect.sizeDelta.y * index + rankDataBuffY ), 0.0f );
 
-			obj.transform.localPosition = new Vector3 (0.0f, -rect.sizeDelta.y * index - 5.0f, 0.0f);
+			rankList.Add ( obj );
 
-			rankList.Add (obj);
-
+			//ランキングデータ格納
 			RankingData rankData = obj.GetComponent<RankingData> ();
-			rankData.Init (json, i);
+			rankData.Init ( json, i );
 			index++;
 
-
-			if (Config.USER_ID != rankData.user_id)
+			if ( Config.USER_ID != rankData.user_id )
 				continue;
 
 			index--;
 			indexRank = i;
 			totalRank = json.Count - 1;
 			rankData.SetFrame ();
-			obj.transform.localPosition += new Vector3 (800.0f,  0.0f, 0.0f);		//右端に待機
-		
+
+			float posX = Mathf.Abs( rankContents.GetComponent<RectTransform> ().sizeDelta.x );
+			if ( posX <= 0f ) {
+				posX = 800f;	//念のため
+			}
+			obj.transform.localPosition += new Vector3 ( posX,  0.0f, 0.0f );		//右端に待機
+
 		}
 
 		//コンテンツサイズを修正
 		RectTransform rank = this.rankContents.GetComponent<RectTransform> ();
-		rank.sizeDelta = new Vector2 (0.0f, rect.sizeDelta.y * totalRank + 5 * (totalRank - 1));
+		rank.sizeDelta = new Vector2 ( 0.0f, rankRect.sizeDelta.y * totalRank + rankDataBuffY * ( totalRank - 1 ) );
 
 		autoScroll.rankList = rankList;
 
-		autoScroll.SetCenter(indexRank, totalRank);
+		autoScroll.SetCenter ( indexRank, totalRank, rankRect.sizeDelta.y + rankDataBuffY );
 
 	}
 

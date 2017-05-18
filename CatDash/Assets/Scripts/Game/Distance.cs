@@ -8,7 +8,6 @@ public class Distance : MonoBehaviour {
 	[SerializeField, HeaderAttribute("距離テキスト")]
 	private Text distanceTxt;
 
-	private float si = 0.0f;
 	// Use this for initialization
 	void Start () {
 
@@ -16,9 +15,9 @@ public class Distance : MonoBehaviour {
 
 	}
 		
-	public void SetDistance(float distance){
+	public void SetDistance( float distance ){
 
-		this.distanceTxt.text = distance.ToString ("F1");
+		this.distanceTxt.text = distance.ToString ( "F1" );
 
 	}
 }
