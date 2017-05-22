@@ -60,6 +60,8 @@
      <Compile Include="Assets\Scripts\Ranking\AutoScrollComponent.cs" />
      <Compile Include="Assets\Scripts\Ranking\RankingController.cs" />
      <Compile Include="Assets\Scripts\Ranking\RankingData.cs" />
+     <Compile Include="Assets\Scripts\Title\LoginModel.cs" />
+     <Compile Include="Assets\Scripts\Title\NameInputModel.cs" />
      <Compile Include="Assets\Scripts\Title\NameModalController.cs" />
      <Compile Include="Assets\Scripts\Title\TitleController.cs" />
      <None Include="Assets\Demigiant\DOTween\readme.txt" />
@@ -103,12 +105,6 @@
  </Reference>
  <Reference Include="LitJson">
  <HintPath>/Users/rokamura/OJT_Rabbit/CatDash/Assets/Plugin/LitJson.dll</HintPath>
- </Reference>
- <Reference Include="UnityEditor.iOS.Extensions.Xcode">
- <HintPath>/Applications/Unity/PlaybackEngines/iOSSupport/UnityEditor.iOS.Extensions.Xcode.dll</HintPath>
- </Reference>
- <Reference Include="UnityEditor.iOS.Extensions.Common">
- <HintPath>/Applications/Unity/PlaybackEngines/iOSSupport/UnityEditor.iOS.Extensions.Common.dll</HintPath>
  </Reference>
   </ItemGroup>
   <ItemGroup>
