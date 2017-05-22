@@ -1,20 +1,15 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/Others/API.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/Game/GameController.cs">
     <Files>
-      <File FileName="Assets/Scripts/Ranking/RankingController.cs" Line="94" Column="1" />
-      <File FileName="Assets/Scripts/Ranking/AutoScrollComponent.cs" Line="54" Column="53" />
-      <File FileName="Assets/Scripts/Others/API.cs" Line="122" Column="1" />
+      <File FileName="Assets/Scripts/Game/GameController.cs" Line="63" Column="4" />
+      <File FileName="Assets/Scripts/Game/Player.cs" Line="135" Column="11" />
+      <File FileName="Assets/Scripts/Game/Timer.cs" Line="25" Column="36" />
+      <File FileName="Assets/Scripts/Game/BackGroundScrollController.cs" Line="67" Column="2" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore>
-      <Breakpoint file="/Users/rokamura/OJT_Rabbit/CatDash/Assets/Scripts/Ranking/AutoScrollComponent.cs" line="93" column="1" />
-      <Breakpoint file="/Users/rokamura/OJT_Rabbit/CatDash/Assets/Scripts/Ranking/RankingController.cs" line="79" column="1" />
-      <Breakpoint file="/Users/rokamura/OJT_Rabbit/CatDash/Assets/Scripts/Ranking/RankingController.cs" line="78" column="1" />
-      <Breakpoint file="/Users/rokamura/OJT_Rabbit/CatDash/Assets/Scripts/Ranking/RankingController.cs" line="72" column="1" />
-      <Breakpoint file="/Users/rokamura/OJT_Rabbit/CatDash/Assets/Scripts/Ranking/AutoScrollComponent.cs" line="41" column="1" />
-    </BreakpointStore>
+    <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
 </Properties>
