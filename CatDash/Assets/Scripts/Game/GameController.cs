@@ -39,12 +39,6 @@ public class GameController : MonoBehaviour {
 	public 	bool isGameOver = false;
 
 
-	/*private const float STOP_TIME = 2.0f; 
-	private const int CONTINUITY_NUM = 2; 
-	private const float MOVING_DISTANCE = 0.5f;
-	private const float MAX_MOVING_DISTANCE = 100.0f;*/
-
-
 	// Use this for initialization
 	void Start () {
 		
@@ -139,7 +133,6 @@ public class GameController : MonoBehaviour {
 		w.AddField ("auth_token", Config.AUTH_TOKEN);
 		w.AddField ("goal_time", this.time.time.ToString());
 		w.AddField ("turnover_num", player.turnOver);
-		Debug.Log ( "最終的に"+player.turnOver+"回転んだ" );
 
 		API api = new API ();
 		api.limitOverObj = this.limitOverObj;

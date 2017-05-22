@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,17 +12,25 @@ public class NameModalController : MonoBehaviour {
 
 	[SerializeField, HeaderAttribute ("名前入力txt")]
 	private Text nameTxt;
+
 	[SerializeField, HeaderAttribute ("注意文言")]
 	private GameObject cautionObj;
+
 	[SerializeField, HeaderAttribute("遷移コントローラー")]
 	private TransitionController transition;
+
 	[SerializeField, HeaderAttribute ("セッション切れ")]
 	private GameObject limitOver;
+
 	[SerializeField, HeaderAttribute ("セッション切れ親obj")]
 	private GameObject parent;
 
 
-	private string userName;
+	//イベント発行
+	public event EventHandler nameInputHandler;
+
+	private NameInputModel nameInputModel = new NameInputModel();
+
 	//private Encoding encJIS = Encoding.GetEncoding("Shift_JIS");
 
 	void Start(){
@@ -37,15 +46,17 @@ public class NameModalController : MonoBehaviour {
 	/// </summary>
 	public void NameInput(){
 
-		this.userName = nameTxt.text;
+		nameInputModel.name = nameTxt.text;
 
 	}
 
 
-
+	/// <summary>
+	/// 決定ボタン
+	/// </summary>
 	public void DecisionButton(){
 	
-		if (string.IsNullOrEmpty (this.userName)) {
+		if (string.IsNullOrEmpty (nameInputModel.name)) {
 			cautionObj.SetActive (true);
 			return;
 		}
@@ -60,40 +71,33 @@ public class NameModalController : MonoBehaviour {
 		}*/
 
 
-		//名前保存
-		PlayerPrefs.SetString ( Config.PREFS_KEY_NAME, this.userName );
-		PlayerPrefs.Save ();
-
-
-		// 新規作成
-		Config.USER_UUID = System.Guid.NewGuid ().ToString ();
-		PlayerPrefs.SetString (Config.PREFS_KEY_UUID, Config.USER_UUID);
-		PlayerPrefs.Save ();
-
-		//通信開始OK 遷移
-
 		//注意文言非表示
 		cautionObj.SetActive (false);
 
-		//API通信開始
-		WWWForm w = new WWWForm ();
-		w.AddField ("uuid", Config.USER_UUID);
-		w.AddField ("user_name", this.userName);
+		//イベント発行
+		nameInputHandler(this,EventArgs.Empty);
 
 
-		API api = new API ();
-		api.parent = this.parent;
-		api.limitOverObj = this.limitOver;
-		StartCoroutine(api.Connect(Config.URL_LOGIN, w, this.transition, GetToken));
 	}
 
 
-	private void GetToken(JsonData json){
+	public void OnRecieveTransition(object sender, EventArgs e){
 
-		Config.AUTH_TOKEN 	= (string)	json["auth_token"];
-		Config.USER_ID 		= (int)		json["user_id"];
+		transition.NextScene ( "scene_Game" );
 
-		//ゲームへ遷移
-		transition.NextScene("scene_Game");
+	}
+
+
+
+	public void SetActive(bool isActive){
+	
+		this.gameObject.SetActive ( isActive );
+	
+	}
+
+
+
+	public string GetName(){
+		return nameInputModel.name;
 	}
 }

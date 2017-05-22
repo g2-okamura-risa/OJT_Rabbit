@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7,65 +8,33 @@ using DG.Tweening;
 
 public class TitleController : MonoBehaviour {
 
-	[SerializeField, HeaderAttribute ("モーダルobj")]
-	private GameObject modalObj;
-
-	[SerializeField, HeaderAttribute ("スタートボタン")]
-	private Button startButton;
-
-	[SerializeField, HeaderAttribute ("スタートボタン画像")]
-	private GameObject startBtnObj;
+	[SerializeField, HeaderAttribute ("名前入力コントローラー")]
+	private NameModalController nameModalController;
 
 	[SerializeField, HeaderAttribute ("遷移コントローラー")]
 	private TransitionController transition;
 
-	[SerializeField, HeaderAttribute ("セッション切れモーダル")]
-	private GameObject limitOver;
-
-	private bool isNewUser = false;
+	private LoginModel loginModel = new LoginModel();
 
 
 	void Start () {
 
+		//名前入力モーダル表示
+		nameModalController.SetActive ( false );
+		nameModalController.nameInputHandler += this.OnRecieveNameInput;
+
+		//イベント登録
+		loginModel.newUserDataHandler += this.OnRecieveEvent;
+		loginModel.transitionHandler += this.OnRecieveTransition;
+
 		DOTween.Init ( false, true, LogBehaviour.ErrorsOnly );
 
-
-		modalObj.SetActive ( false );
-
-		//uuid取得
-		Config.USER_UUID = PlayerPrefs.GetString ( Config.PREFS_KEY_UUID );
-
-		if ( Config.USER_UUID == "" ) {
-			//名前入力モーダル表示フラグ
-			this.isNewUser = true;
-
-			return;
-		}
-
-
-		this.isNewUser = false;
 	}
 	
 	#region ボタン
-	public void ToGame(){
+	public void GameStart(){
 
-		if ( this.isNewUser ) {
-			
-			modalObj.SetActive ( true );
-			startButton.interactable = false;
-
-		} else {
-			
-			//uuid送信しtokenもらう
-			WWWForm w = new WWWForm();
-			w.AddField ( "uuid", Config.USER_UUID );
-
-			API api = new API ();
-			api.limitOverObj = limitOver;
-			api.parent = this.gameObject;
-			StartCoroutine( api.Connect ( Config.URL_LOGIN, w, transition, GetToken ) );
-
-		}
+		StartCoroutine ( loginModel.Loading (transition) );
 
 	}
 
@@ -76,15 +45,30 @@ public class TitleController : MonoBehaviour {
 	
 	}
 
+
+
+
 	#endregion
-	private void GetToken( JsonData json ){
 
-		Config.AUTH_TOKEN 	= (string)	json["auth_token"];
-		Config.USER_ID 		= (int)		json ["user_id"];
 
-		//ゲームへ遷移
-		transition.NextScene("scene_Game");
+	public void OnRecieveEvent(object sender, EventArgs e){
+
+		nameModalController.SetActive ( true );
+
 	}
 
+
+	public void OnRecieveTransition(object sender, EventArgs e){
+	
+		transition.NextScene ( "scene_Game" );
+	
+	}
+
+
+	public void OnRecieveNameInput(object sender, EventArgs e){
+
+		loginModel.SetUserName(nameModalController.GetName());
+		StartCoroutine ( loginModel.Loading (transition) );
+	}
 
 }
