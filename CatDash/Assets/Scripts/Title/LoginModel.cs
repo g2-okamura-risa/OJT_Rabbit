@@ -26,8 +26,6 @@ public class LoginModel{
 		} 
 
 
-
-
 		//uuid送信しtokenもらう
 		WWWForm w = new WWWForm();
 		w.AddField ( "uuid", uuid );
@@ -66,7 +64,6 @@ public class LoginModel{
 	public void SetUserName(string name){
 		this.name = name;
 	}
-
 
 
 
