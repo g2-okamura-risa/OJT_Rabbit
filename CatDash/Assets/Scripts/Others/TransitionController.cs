@@ -38,9 +38,7 @@ public class TransitionController : MonoBehaviour {
 
 
 	}
-
-
-
+		
 	private void Process1(){
 		
 		curtainImg.DOColor (new Color (0f, 0f, 0f, 1f),0.8f).OnComplete (() => {Process2();});
@@ -49,16 +47,8 @@ public class TransitionController : MonoBehaviour {
 	private void Process2(){
 
 		SceneManager.LoadScene(sceneName);
-		//loadingObj.SetActive(true);
-		//StartCoroutine(LoadingScene (sceneName));
-
-		//curtainImg.DOColor (new Color (0f, 0f, 0f, 0f),0.8f).OnComplete (() => {Process3();});
-
 	}
 
-	private void Process3(){
-		Destroy (this.gameObject);
-	}
 
 
 	#region test
