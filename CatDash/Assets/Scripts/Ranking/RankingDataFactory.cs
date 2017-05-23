@@ -10,7 +10,7 @@ public class RankingDataFactory : MonoBehaviour {
 	private GameObject prefab;
 
 
-	public GameObject CreateObj(RankingDataModel dateModel){
+	public GameObject CreateObj(RankingData dateModel){
 	
 		GameObject obj = Instantiate( prefab );
 		obj.GetComponent<RankingDataController> ().Init ( dateModel );

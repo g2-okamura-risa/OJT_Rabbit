@@ -7,7 +7,7 @@ using LitJson;
 public class RankingModel : MonoBehaviour {
 
 
-	public List<RankingDataModel> rankingList = new List<RankingDataModel> ();
+	public List<RankingData> rankingList = new List<RankingData> ();
 	public event EventHandler rankingHandler;
 
 
@@ -30,7 +30,7 @@ public class RankingModel : MonoBehaviour {
 	
 		for ( int i = 0; i < json.Count - 1; i++ ) {
 		
-			RankingDataModel rankDataModel = new RankingDataModel ();
+			RankingData rankDataModel = new RankingData ();
 			rankDataModel.name 		= (string)	json [i]["user_name"];
 			int score				= (int)		json [i]["score"];
 			rankDataModel.user_id 	= (int)		json [i]["user_id"];

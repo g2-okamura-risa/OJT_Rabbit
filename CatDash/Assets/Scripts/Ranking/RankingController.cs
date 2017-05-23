@@ -34,15 +34,16 @@ public class RankingController : MonoBehaviour {
 	private Image fadeImage;
 
 	private RankingModel rankingModel = new RankingModel();
-	private List<RankingDataModel> rankList = new List<RankingDataModel> ();
+	private List<RankingData> rankList = new List<RankingData> ();
 	private List<GameObject> rankGameObjList = new List<GameObject>();//アニメーション用
 
 
 
 
 	void Awake(){
+		
 		InitFadeImage ();
-		rankingModel.rankingHandler += this.CreateRankingData;
+		rankingModel.rankingHandler += this.InitRankingData;
 		StartCoroutine ( rankingModel.GetRankingData ( transition ) );
 	
 	}
@@ -64,10 +65,20 @@ public class RankingController : MonoBehaviour {
 	/// </summary>
 	/// <param name="sender">Sender.</param>
 	/// <param name="e">E.</param>
-	private void CreateRankingData(object sender, EventArgs e){
+	private void InitRankingData(object sender, EventArgs e){
 
+		CreateData ();
+		AnimationSet ();
+		SetFadeOut ();
+
+	}
+
+
+
+	private void CreateData(){
+	
 		rankList = rankingModel.rankingList;
-		GameObject obj 				= null;
+		GameObject obj = null;
 
 		for ( int i = 0; i < rankList.Count; i++ ){
 
@@ -79,10 +90,6 @@ public class RankingController : MonoBehaviour {
 
 		}
 
-		AnimationSet ();
-
-
-		SetFadeOut ();
 	}
 
 	private void InitFadeImage(){

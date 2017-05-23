@@ -56,9 +56,9 @@
      <Compile Include="Assets\Scripts\Others\TransitionController.cs" />
      <Compile Include="Assets\Scripts\Ranking\AutoScrollComponent.cs" />
      <Compile Include="Assets\Scripts\Ranking\RankingController.cs" />
+     <Compile Include="Assets\Scripts\Ranking\RankingData.cs" />
      <Compile Include="Assets\Scripts\Ranking\RankingDataController.cs" />
      <Compile Include="Assets\Scripts\Ranking\RankingDataFactory.cs" />
-     <Compile Include="Assets\Scripts\Ranking\RankingDataModel.cs" />
      <Compile Include="Assets\Scripts\Ranking\RankingModel.cs" />
      <Compile Include="Assets\Scripts\Title\LoginModel.cs" />
      <Compile Include="Assets\Scripts\Title\NameInputModel.cs" />

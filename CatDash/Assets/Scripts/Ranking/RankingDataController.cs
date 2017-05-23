@@ -21,7 +21,7 @@ public class RankingDataController : MonoBehaviour {
 
 	public int user_id;
 
-	public void Init(RankingDataModel rankData){
+	public void Init(RankingData rankData){
 		
 		this.frameObj.SetActive (false);
 		this.nameTxt.text 	= rankData.name;
