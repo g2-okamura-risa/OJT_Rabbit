@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using LitJson;
 using DG.Tweening;
 
-public class RankingData : MonoBehaviour {
+public class RankingDataController : MonoBehaviour {
 
 
 	[SerializeField, HeaderAttribute ("名前")]
@@ -21,21 +21,24 @@ public class RankingData : MonoBehaviour {
 
 	public int user_id;
 
-	public void Init(JsonData rankData, int num){
+	public void Init(RankingDataModel rankData){
 		
 		this.frameObj.SetActive (false);
-		this.nameTxt.text 	= (string)	rankData [num]["user_name"];
-		int score			= (int)		rankData [num]["score"];
-		this.user_id 		= (int)		rankData [num]["user_id"];
-		this.scoreTxt.text 	= string.Format ("{0:#,0}Pt", score);
-		this.rankTxt.text 	= (num + 1).ToString () + "位";
+		this.nameTxt.text 	= rankData.name;
+		this.user_id 		= rankData.user_id;
+		this.scoreTxt.text 	= rankData.score;
+		this.rankTxt.text 	= rankData.ranking;
 
+		if ( Config.USER_ID == this.user_id ) {
+			SetFrame ();
+		
+		}
 	}
 
 	/// <summary>
 	/// フレームを光らせる
 	/// </summary>
-	public void SetFrame(){
+	private void SetFrame(){
 	
 		this.frameObj.SetActive (true);
 

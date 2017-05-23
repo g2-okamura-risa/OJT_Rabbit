@@ -1,6 +1,9 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using DG.Tweening;
 using LitJson;
 
 
@@ -9,8 +12,11 @@ public class RankingController : MonoBehaviour {
 	[SerializeField, HeaderAttribute ("rankingData親obj")]
 	private GameObject rankContents;
 
-	[SerializeField, HeaderAttribute ("rankingDataプレハブ")]
-	private GameObject rankPrefab;
+	[SerializeField, HeaderAttribute("rankingData親Rect")]
+	private RectTransform rankContentRect;
+
+	[SerializeField, HeaderAttribute("rankDataファクトリー")]
+	private RankingDataFactory rankFactory;
 
 	[SerializeField, HeaderAttribute("遷移コントローラ")]
 	private TransitionController transition;
@@ -24,84 +30,116 @@ public class RankingController : MonoBehaviour {
 	[SerializeField, HeaderAttribute("ランキングデータの間隔サイズ")]
 	private float rankDataBuffY = 5.0f; 
 
+	[SerializeField, HeaderAttribute("フェード画像")]
+	private Image fadeImage;
 
-	private int indexRank = 0;
-	private int totalRank = 0;
+	private RankingModel rankingModel = new RankingModel();
+	private List<RankingDataModel> rankList = new List<RankingDataModel> ();
+	private List<GameObject> rankGameObjList = new List<GameObject>();//アニメーション用
+
+
+
 
 	void Awake(){
-
-		//TODO: ランキングデータ取得通信
-		API api = new API ();
-		api.limitOverObj = this.limitOverObj;
-		api.parent = this.gameObject;
-		WWWForm w = new WWWForm ();
-		w.AddField ( "auth_token", Config.AUTH_TOKEN );
-		StartCoroutine ( api.Connect ( Config.URL_RANKING, w, transition, GetRanking ) );
-
+		InitFadeImage ();
+		rankingModel.rankingHandler += this.CreateRankingData;
+		StartCoroutine ( rankingModel.GetRankingData ( transition ) );
+	
 	}
 
 
-	#region ボタン
 
 	/// <summary>
 	/// タイトル画面に遷移
 	/// </summary>
 	public void ToTitle(){
+		
 		transition.NextScene ( "scene_Title" );
+	
+	}
+		
+
+	/// <summary>
+	/// ランキングデータ生成
+	/// </summary>
+	/// <param name="sender">Sender.</param>
+	/// <param name="e">E.</param>
+	private void CreateRankingData(object sender, EventArgs e){
+
+		rankList = rankingModel.rankingList;
+		GameObject obj 				= null;
+
+		for ( int i = 0; i < rankList.Count; i++ ){
+
+			//生成
+			obj = rankFactory.CreateObj(rankList [i]);
+			obj.transform.parent = this.rankContents.transform;
+
+			rankGameObjList.Add ( obj );
+
+		}
+
+		AnimationSet ();
+
+
+		SetFadeOut ();
 	}
 
-	#endregion
-
-
-	private void GetRanking(JsonData json){
-
-		int index = 0; //位置ずらし用
-
-		List<GameObject> rankList 	= new List<GameObject> ();
-		RectTransform rankRect 		= null;
-		GameObject obj 				= null;
-	
-		for ( int i = 0; i < json.Count-1; i++ ){
+	private void InitFadeImage(){
 		
-			obj = Instantiate ( rankPrefab, this.rankContents.transform ) as GameObject;
-			rankRect = obj.GetComponent<RectTransform> ();
+		fadeImage.color = new Color (0f, 0f, 0f, 1f);
+	
+	}
+
+	private void SetFadeOut(){
+		
+		fadeImage.DOColor (new Color (0f, 0f, 0f, 0f), 0.8f);
+	}
+
+
+
+	private void AnimationSet(){
+
+		int index = 0;
+		int myIndex = 0;
+		RectTransform rankRect = null;
+		for ( int i = 0; i < rankGameObjList.Count; i++ ){
+
+	
+			rankRect = rankGameObjList[i].GetComponent<RectTransform> ();
+
 			//オブジェクト生成位置を等間隔
-			obj.transform.localPosition = new Vector3 ( 0.0f, -( rankRect.sizeDelta.y * index + rankDataBuffY ), 0.0f );
+			rankGameObjList[i].transform.localPosition = new Vector3 ( 0.0f, -( rankRect.sizeDelta.y * index + rankDataBuffY ), 0.0f );
 
-			rankList.Add ( obj );
-
-			//ランキングデータ格納
-			RankingData rankData = obj.GetComponent<RankingData> ();
-			rankData.Init ( json, i );
 			index++;
 
-			if ( Config.USER_ID != rankData.user_id )
+			if ( Config.USER_ID != rankList[i].user_id )
 				continue;
 
 			index--;
-			indexRank = i;
-			totalRank = json.Count - 1;
-			rankData.SetFrame ();
+			myIndex = i;
 
-			float posX = Mathf.Abs( rankContents.GetComponent<RectTransform> ().sizeDelta.x );
+	
+			float posX = Mathf.Abs( rankContentRect.sizeDelta.x );
 			if ( posX <= 0f ) {
 				posX = 800f;	//念のため
 			}
-			obj.transform.localPosition += new Vector3 ( posX,  0.0f, 0.0f );		//右端に待機
+			rankGameObjList[i].transform.localPosition += new Vector3 ( posX,  0.0f, 0.0f );		//右端に待機
 
 		}
 
 		//コンテンツサイズを修正
-		RectTransform rank = this.rankContents.GetComponent<RectTransform> ();
-		rank.sizeDelta = new Vector2 ( 0.0f, rankRect.sizeDelta.y * totalRank + rankDataBuffY * ( totalRank - 1 ) );
+		rankContentRect.sizeDelta = new Vector2 ( 0.0f, rankRect.sizeDelta.y * rankList.Count + rankDataBuffY * ( rankList.Count - 1 ) );
 
-		autoScroll.rankList = rankList;
+		autoScroll.rankList = rankGameObjList;
 
-		autoScroll.SetCenter ( indexRank, totalRank, rankRect.sizeDelta.y + rankDataBuffY );
+		autoScroll.SetCenter ( myIndex, rankList.Count, rankRect.sizeDelta.y + rankDataBuffY );
 
+	
 	}
 
 
 
 
 }
+
