@@ -35,16 +35,13 @@ public class GameController : MonoBehaviour {
 
 
 	private GameModel gameModel;
-
+	private GameModel.ANIMATION_STATE animState;
 
 	// Use this for initialization
 	void Start () {
 
 		gameModel = new GameModel ();
 		gameModel.transitionHandler += this.OnRecieveTransition;
-		gameModel.turnOverHandler 	+= this.OnRecieveTurnOver;
-		gameModel.animationHandler += this.OnRecieveAnimationState;
-
 
 		//全画面タップOFF
 		screenBtnObj.SetActive (false);
@@ -55,12 +52,12 @@ public class GameController : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
+		if ( !gameModel.isGameStart )
+			return;
 
-		if ( gameModel.isGameStart ) {
-			timerTxt.text = gameModel.GetTime ();
-			gameModel.Update ();
 
-		}
+		timerTxt.text = gameModel.GetCurrentTime ( Time.deltaTime );
+
 
 		//デバッグ用
 		if ( this.footBtn [0].interactable ) {
@@ -79,46 +76,22 @@ public class GameController : MonoBehaviour {
 	}
 
 
-
 	#region ボタン
-
 	public void LeftBtn(){
 
-		MovePlayer ();
-		gameModel.MoveLeft ();
-
+		animState = gameModel.GetState ( GameModel.INPUT_TYPE.LEFT );
+		this.SetAction ( animState );
+	
 	}
 
 
 	public void RightBtn(){
 
-		MovePlayer ();
-		gameModel.MoveRight ();
-	}
-
-	/// <summary>
-	/// タップ時処理まとめ
-	/// </summary>
-	private void MovePlayer(){
-	
-		gameModel.isGameStart = true;
-
-		float posX = gameModel.AddScrollBg ();
-
-		bgRectTransform.localPosition = new Vector3 ( posX, bgRectTransform.localPosition.y, 0f );
-
-		distanceTxt.text = gameModel.AddDistance ().ToString("F1");
-	}
-
-	/// <summary>
-	/// ボタンアクティブセット
-	/// </summary>
-	private void isFootBtn(bool isActive){
-
-		this.footBtn [0].interactable = isActive;
-		this.footBtn [1].interactable = isActive;
+		animState = gameModel.GetState ( GameModel.INPUT_TYPE.RIGHT );
+		this.SetAction ( animState );
 
 	}
+
 
 
 
@@ -127,66 +100,93 @@ public class GameController : MonoBehaviour {
 		StartCoroutine ( gameModel.ScoreSend ( transition ) );
 	
 	}
-
-
-
 	#endregion
 
 
-
-
-
-	#region イベント受け取り
-
+	/// <summary>
+	/// 画面遷移イベント
+	/// </summary>
 	public void OnRecieveTransition(object sender, EventArgs e){
 
 		transition.NextScene ( "scene_Ranking" );
 
 	}
+		
 
+	/// <summary>
+	/// ステートセット
+	/// </summary>
+	private void SetAction(GameModel.ANIMATION_STATE action){
 
-	public void OnRecieveTurnOver(object sender, GameEventArgs g){
-	
-		isFootBtn ( !g.isTurnOver );
-
-
-		if ( g.isTurnOver ) {
-			//転んだ
-			animator.SetTrigger ( "TURN_OVER" );
-		}
-			
-	}
-
-
-
-	public void OnRecieveAnimationState(object sender, GameEventArgs g){
-
-		switch ( g.state ) {
-
+		switch ( action ) {
 
 			case GameModel.ANIMATION_STATE.LEFT_WALK:
+
+				MoveBackGround ();
+				UpdateScore ();
 				animator.SetTrigger ( "LEFT_WALK" );
 				break;
 
 			case GameModel.ANIMATION_STATE.RIGHT_WALK:
+
+				MoveBackGround ();
+				UpdateScore ();
 				animator.SetTrigger ( "RIGHT_WALK" );
 				break;
 
 			case GameModel.ANIMATION_STATE.JUMP:
 
+				UpdateScore ();
 				animator.SetBool ( "JUMP", true );
 				screenBtnObj.SetActive ( true );
-				isFootBtn ( false );
+				SetActiveFootBtn ( false );
 				break;
 
-		}
 
+			case GameModel.ANIMATION_STATE.TURNOVER:
+				
+				animator.SetTrigger ( "TURN_OVER" );
+				StartCoroutine ( WaitRecoveryBtn() );
+				break;
+		
+		}
+	}
+
+
+	/// <summary>
+	/// タップ時処理まとめ
+	/// </summary>
+	private void MoveBackGround(){
+
+		bgRectTransform.localPosition = new Vector3 (  gameModel.bgPosX, bgRectTransform.localPosition.y, 0f );
+
+	}
+
+	private void UpdateScore(){
+		
+		distanceTxt.text = gameModel.distance.ToString ( "F1" );
 
 	}
 
 
+	/// <summary>
+	/// ボタンアクティブセット
+	/// </summary>
+	private void SetActiveFootBtn(bool isActive){
 
-	#endregion
+		this.footBtn [0].interactable = isActive;
+		this.footBtn [1].interactable = isActive;
+
+	}
+
+
+	private IEnumerator WaitRecoveryBtn(){
+		
+		SetActiveFootBtn ( false );
+		yield return new WaitForSeconds(2.0f);
+		SetActiveFootBtn ( true );
+	
+	}
 
 
 
