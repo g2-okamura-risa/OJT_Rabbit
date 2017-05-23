@@ -31,8 +31,6 @@ public class NameModalController : MonoBehaviour {
 
 	private NameInputModel nameInputModel = new NameInputModel();
 
-	//private Encoding encJIS = Encoding.GetEncoding("Shift_JIS");
-
 	void Start(){
 
 		this.cautionObj.SetActive (false);
@@ -60,15 +58,6 @@ public class NameModalController : MonoBehaviour {
 			cautionObj.SetActive (true);
 			return;
 		}
-
-		//半角判定
-		/*int num = encJIS.GetByteCount(this.userName);
-		bool isZenkaku = ( num == this.userName.Length * 2 );
-
-		if (!isZenkaku) {
-			cautionObj.SetActive (true);
-			return;
-		}*/
 
 
 		//注意文言非表示

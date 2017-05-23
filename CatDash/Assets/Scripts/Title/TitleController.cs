@@ -31,7 +31,7 @@ public class TitleController : MonoBehaviour {
 
 	}
 	
-	#region ボタン
+
 	public void GameStart(){
 
 		StartCoroutine ( loginModel.Loading (transition) );
@@ -44,11 +44,6 @@ public class TitleController : MonoBehaviour {
 		PlayerPrefs.DeleteAll();
 	
 	}
-
-
-
-
-	#endregion
 
 
 	public void OnRecieveEvent(object sender, EventArgs e){
@@ -70,5 +65,7 @@ public class TitleController : MonoBehaviour {
 		loginModel.SetUserName(nameModalController.GetName());
 		StartCoroutine ( loginModel.Loading (transition) );
 	}
+
+
 
 }

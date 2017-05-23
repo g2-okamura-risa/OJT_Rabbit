@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7,22 +8,11 @@ using LitJson;
 
 public class GameController : MonoBehaviour {
 
-	[SerializeField, HeaderAttribute("距離コントローラー")]
-	private Distance distanceController;
-
-	[SerializeField, HeaderAttribute("タイマーコントローラー")]
-	private Timer time;
-
 	[SerializeField, HeaderAttribute("遷移コントローラー")]
-	private TransitionController tansition;
+	private TransitionController transition;
 
-
-	[SerializeField, HeaderAttribute("プレイヤーコントローラー")]
-	private Player player; //移動用
-
-	[SerializeField, HeaderAttribute("プレイヤーコントローラー")]
-	private BackGroundScrollController bgController;
-
+	[SerializeField, HeaderAttribute("アニメーションコントローラー")]
+	private Animator animator;
 
 	[SerializeField, HeaderAttribute("足ボタン")]
 	private Button[] footBtn = new Button[2];
@@ -33,15 +23,29 @@ public class GameController : MonoBehaviour {
 	[SerializeField, HeaderAttribute("セッション切れモーダルプレハブ")]
 	private GameObject limitOverObj;
 
+	[SerializeField, HeaderAttribute("タイマーテキスト")]
+	private Text timerTxt;
 
-	private bool isTurnOver = false; //転んだらtrue; 2秒間ボタン停止
+	[SerializeField, HeaderAttribute("距離テキスト")]
+	private Text distanceTxt;
 
-	public 	bool isGameOver = false;
+	[SerializeField, HeaderAttribute("背景画像の親obj")]
+	private RectTransform bgRectTransform;
+
+
+
+	private GameModel gameModel;
 
 
 	// Use this for initialization
 	void Start () {
-		
+
+		gameModel = new GameModel ();
+		gameModel.transitionHandler += this.OnRecieveTransition;
+		gameModel.turnOverHandler 	+= this.OnRecieveTurnOver;
+		gameModel.animationHandler += this.OnRecieveAnimationState;
+
+
 		//全画面タップOFF
 		screenBtnObj.SetActive (false);
 
@@ -51,24 +55,15 @@ public class GameController : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-		if (this.isGameOver) {
 
-			this.time.countStart = false;
+		if ( gameModel.isGameStart ) {
+			timerTxt.text = gameModel.GetTime ();
+			gameModel.Update ();
 
-			//ゴールアニメーション
-			player.SetState( Player.PLAYER_STATE.JUMP );
-
-			//全画面タップON
-			screenBtnObj.SetActive ( true );
-
-			this.isGameOver = false;
-
-			return;
 		}
-			
 
-
-		if ( !isTurnOver ) {
+		//デバッグ用
+		if ( this.footBtn [0].interactable ) {
 			
 			if ( Input.GetKeyDown ( KeyCode.A ) ) {
 
@@ -89,34 +84,47 @@ public class GameController : MonoBehaviour {
 
 	public void LeftBtn(){
 
-		time.countStart = true;
-		player.SetState(Player.PLAYER_STATE.LEFT_WALK);
+		MovePlayer ();
+		gameModel.MoveLeft ();
 
 	}
 
 
 	public void RightBtn(){
 
-		time.countStart = true;
-
-		player.SetState(Player.PLAYER_STATE.RIGHT_WALK);
-
-
+		MovePlayer ();
+		gameModel.MoveRight ();
 	}
 
-	public void isFootBtn(bool isActive){
+	/// <summary>
+	/// タップ時処理まとめ
+	/// </summary>
+	private void MovePlayer(){
+	
+		gameModel.isGameStart = true;
+
+		float posX = gameModel.AddScrollBg ();
+
+		bgRectTransform.localPosition = new Vector3 ( posX, bgRectTransform.localPosition.y, 0f );
+
+		distanceTxt.text = gameModel.AddDistance ().ToString("F1");
+	}
+
+	/// <summary>
+	/// ボタンアクティブセット
+	/// </summary>
+	private void isFootBtn(bool isActive){
 
 		this.footBtn [0].interactable = isActive;
 		this.footBtn [1].interactable = isActive;
 
-		// ボタンoff = ころんだ
-		this.isTurnOver = !isActive;
 	}
+
+
 
 	public void ScreenTap(){
-	
-		//API
-		ScoreSend();
+		
+		StartCoroutine ( gameModel.ScoreSend ( transition ) );
 	
 	}
 
@@ -124,34 +132,63 @@ public class GameController : MonoBehaviour {
 
 	#endregion
 
-	#region API
 
 
-	private void ScoreSend(){
+
+
+	#region イベント受け取り
+
+	public void OnRecieveTransition(object sender, EventArgs e){
+
+		transition.NextScene ( "scene_Ranking" );
+
+	}
+
+
+	public void OnRecieveTurnOver(object sender, GameEventArgs g){
 	
-		WWWForm w = new WWWForm();
-		w.AddField ("auth_token", Config.AUTH_TOKEN);
-		w.AddField ("goal_time", this.time.time.ToString());
-		w.AddField ("turnover_num", player.turnOver);
+		isFootBtn ( !g.isTurnOver );
 
-		API api = new API ();
-		api.limitOverObj = this.limitOverObj;
-		api.parent = this.gameObject;
-		StartCoroutine(api.Connect(Config.URL_RESULT, w, tansition, ToResult));
+
+		if ( g.isTurnOver ) {
+			//転んだ
+			animator.SetTrigger ( "TURN_OVER" );
+		}
+			
+	}
+
+
+
+	public void OnRecieveAnimationState(object sender, GameEventArgs g){
+
+		switch ( g.state ) {
+
+
+			case GameModel.ANIMATION_STATE.LEFT_WALK:
+				animator.SetTrigger ( "LEFT_WALK" );
+				break;
+
+			case GameModel.ANIMATION_STATE.RIGHT_WALK:
+				animator.SetTrigger ( "RIGHT_WALK" );
+				break;
+
+			case GameModel.ANIMATION_STATE.JUMP:
+
+				animator.SetBool ( "JUMP", true );
+				screenBtnObj.SetActive ( true );
+				isFootBtn ( false );
+				break;
+
+		}
+
 
 	}
 
-	private void ToResult(JsonData json){
-
-		tansition.NextScene ("scene_Ranking");
-
-	}
 
 
 	#endregion
 
 
 
-	
 
 }
